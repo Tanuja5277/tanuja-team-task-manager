@@ -16,6 +16,10 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 })
 export class Dashboard implements OnInit {
 
+  // LIVE BACKEND URL
+
+  apiUrl = 'https://tanuja-team-task-manager-production.up.railway.app/api/tasks';
+
   showModal = false;
 
   tasks: any[] = [];
@@ -30,18 +34,21 @@ export class Dashboard implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+
     this.getTasks();
   }
 
   // OPEN MODAL
 
   openModal() {
+
     this.showModal = true;
   }
 
   // CLOSE MODAL
 
   closeModal() {
+
     this.showModal = false;
   }
 
@@ -49,7 +56,7 @@ export class Dashboard implements OnInit {
 
   getTasks() {
 
-    this.http.get<any>('http://localhost:5000/api/tasks')
+    this.http.get<any>(this.apiUrl)
       .subscribe({
 
         next: (res) => {
@@ -69,7 +76,7 @@ export class Dashboard implements OnInit {
   createTask() {
 
     this.http.post(
-      'http://localhost:5000/api/tasks/create',
+      `${this.apiUrl}/create`,
       this.formData
     ).subscribe({
 
@@ -103,7 +110,7 @@ export class Dashboard implements OnInit {
   deleteTask(id: string) {
 
     this.http.delete(
-      `http://localhost:5000/api/tasks/${id}`
+      `${this.apiUrl}/${id}`
     ).subscribe({
 
       next: () => {
@@ -127,7 +134,7 @@ export class Dashboard implements OnInit {
   toggleComplete(id: string) {
 
     this.http.put(
-      `http://localhost:5000/api/tasks/complete/${id}`,
+      `${this.apiUrl}/complete/${id}`,
       {}
     ).subscribe({
 
