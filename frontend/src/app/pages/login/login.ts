@@ -27,6 +27,10 @@ export class Login {
     password: ''
   };
 
+  // RAILWAY BACKEND URL
+
+  apiUrl = 'https://tanuja-team-task-manager-production.up.railway.app';
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -35,7 +39,7 @@ export class Login {
   login() {
 
     this.http.post<any>(
-      'http://localhost:5000/api/auth/login',
+      `${this.apiUrl}/api/auth/login`,
       this.formData
     ).subscribe({
 

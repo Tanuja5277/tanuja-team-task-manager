@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
+
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
@@ -16,13 +19,13 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 })
 export class Dashboard implements OnInit {
 
-  // LIVE BACKEND URL
-
-  apiUrl = 'https://tanuja-team-task-manager-production.up.railway.app/api/tasks';
-
   showModal = false;
 
   tasks: any[] = [];
+
+  // RAILWAY BACKEND URL
+
+  apiUrl = 'https://tanuja-team-task-manager-production.up.railway.app';
 
   formData = {
     title: '',
@@ -34,21 +37,18 @@ export class Dashboard implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-
     this.getTasks();
   }
 
   // OPEN MODAL
 
   openModal() {
-
     this.showModal = true;
   }
 
   // CLOSE MODAL
 
   closeModal() {
-
     this.showModal = false;
   }
 
@@ -56,19 +56,20 @@ export class Dashboard implements OnInit {
 
   getTasks() {
 
-    this.http.get<any>(this.apiUrl)
-      .subscribe({
+    this.http.get<any>(
+      `${this.apiUrl}/api/tasks`
+    ).subscribe({
 
-        next: (res) => {
+      next: (res) => {
 
-          this.tasks = res.tasks;
-        },
+        this.tasks = res.tasks;
+      },
 
-        error: (err) => {
+      error: (err) => {
 
-          console.log(err);
-        }
-      });
+        console.log(err);
+      }
+    });
   }
 
   // CREATE TASK
@@ -76,7 +77,7 @@ export class Dashboard implements OnInit {
   createTask() {
 
     this.http.post(
-      `${this.apiUrl}/create`,
+      `${this.apiUrl}/api/tasks/create`,
       this.formData
     ).subscribe({
 
@@ -110,7 +111,7 @@ export class Dashboard implements OnInit {
   deleteTask(id: string) {
 
     this.http.delete(
-      `${this.apiUrl}/${id}`
+      `${this.apiUrl}/api/tasks/${id}`
     ).subscribe({
 
       next: () => {
@@ -134,7 +135,7 @@ export class Dashboard implements OnInit {
   toggleComplete(id: string) {
 
     this.http.put(
-      `${this.apiUrl}/complete/${id}`,
+      `${this.apiUrl}/api/tasks/complete/${id}`,
       {}
     ).subscribe({
 

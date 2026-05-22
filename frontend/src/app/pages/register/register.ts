@@ -28,6 +28,10 @@ export class Register {
     password: ''
   };
 
+  // RAILWAY BACKEND URL
+
+  apiUrl = 'https://tanuja-team-task-manager-production.up.railway.app';
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -35,16 +39,16 @@ export class Register {
 
   register() {
 
-    this.http.post(
-      'http://localhost:5000/api/auth/register',
+    this.http.post<any>(
+      `${this.apiUrl}/api/auth/register`,
       this.formData
     ).subscribe({
 
-      next: (response: any) => {
+      next: (response) => {
 
         alert('Registration Successful');
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/login']);
       },
 
       error: (error) => {
