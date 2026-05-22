@@ -1,0 +1,57 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-900">
+
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-[400px]">
+
+        <h1 class="text-3xl font-bold text-white text-center mb-6">
+            Tanuja Team Task Manager
+        </h1>
+
+        <form class="space-y-5" (ngSubmit)="login()">
+
+            <div>
+                <label class="text-white block mb-2">Email</label>
+
+                <input
+                    type="email"
+                    placeholder="Enter email"
+                    [(ngModel)]="formData.email"
+                    name="email"
+                    class="w-full p-3 rounded-lg bg-gray-700 text-white outline-none"
+                >
+            </div>
+
+            <div>
+                <label class="text-white block mb-2">Password</label>
+
+                <input
+                    type="password"
+                    placeholder="Enter password"
+                    [(ngModel)]="formData.password"
+                    name="password"
+                    class="w-full p-3 rounded-lg bg-gray-700 text-white outline-none"
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition duration-300"
+            >
+                Login
+            </button>
+
+        </form>
+
+        <p class="text-gray-400 text-center mt-5">
+            Don't have an account?
+
+            <a
+                routerLink="/register"
+                class="text-blue-400 cursor-pointer"
+            >
+                Register
+            </a>
+        </p>
+
+    </div>
+
+</div>

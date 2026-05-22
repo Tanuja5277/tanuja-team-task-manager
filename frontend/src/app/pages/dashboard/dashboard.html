@@ -1,0 +1,281 @@
+<div class="min-h-screen bg-slate-950 text-white p-8">
+
+    <!-- HEADER -->
+
+    <div class="flex justify-between items-center mb-10">
+
+        <div>
+            <h1 class="text-4xl font-bold">
+                Task Dashboard
+            </h1>
+
+            <p class="text-slate-400 mt-2">
+                Manage your daily tasks easily 🚀
+            </p>
+        </div>
+
+        <button
+            (click)="openModal()"
+            class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold transition"
+        >
+            + Add Task
+        </button>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+
+        <!-- TOTAL -->
+
+        <div class="bg-slate-800 p-6 rounded-2xl shadow-lg">
+
+            <h2 class="text-slate-400 text-lg">
+                Total Tasks
+            </h2>
+
+            <p class="text-4xl font-bold mt-3">
+                {{ tasks.length }}
+            </p>
+
+        </div>
+
+        <!-- COMPLETED -->
+
+        <div class="bg-slate-800 p-6 rounded-2xl shadow-lg">
+
+            <h2 class="text-slate-400 text-lg">
+                Completed
+            </h2>
+
+            <p class="text-4xl font-bold text-green-400 mt-3">
+                {{ tasks.filter(task => task.completed).length }}
+            </p>
+
+        </div>
+
+        <!-- PENDING -->
+
+        <div class="bg-slate-800 p-6 rounded-2xl shadow-lg">
+
+            <h2 class="text-slate-400 text-lg">
+                Pending
+            </h2>
+
+            <p class="text-4xl font-bold text-yellow-400 mt-3">
+                {{ tasks.filter(task => !task.completed).length }}
+            </p>
+
+        </div>
+
+        <!-- OVERDUE -->
+
+        <div class="bg-slate-800 p-6 rounded-2xl shadow-lg">
+
+            <h2 class="text-slate-400 text-lg">
+                Overdue
+            </h2>
+
+            <p class="text-4xl font-bold text-red-400 mt-3">
+                0
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- TASK LIST -->
+
+    <div
+        *ngIf="tasks.length > 0"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+
+        <div
+            *ngFor="let task of tasks"
+            [class]="task.completed
+            ? 'bg-green-900 rounded-2xl p-6 shadow-xl border border-green-500'
+            : 'bg-slate-800 rounded-2xl p-6 shadow-xl border border-slate-700'"
+        >
+
+            <!-- TOP -->
+
+            <div class="flex justify-between items-center mb-4">
+
+                <h2
+                    class="text-2xl font-bold"
+                    [class.line-through]="task.completed"
+                >
+                    {{ task.title }}
+                </h2>
+
+                <span
+                    class="px-3 py-1 rounded-full text-sm font-semibold"
+                    [ngClass]="{
+                        'bg-red-500': task.priority === 'High',
+                        'bg-yellow-500 text-black': task.priority === 'Medium',
+                        'bg-green-500': task.priority === 'Low'
+                    }"
+                >
+                    {{ task.priority }}
+                </span>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+
+            <p
+                class="text-slate-300 mb-6"
+                [class.line-through]="task.completed"
+            >
+                {{ task.description }}
+            </p>
+
+            <!-- FOOTER -->
+
+            <div class="flex justify-between items-center">
+
+                <p class="text-slate-400 text-sm">
+                    Due:
+                    {{ task.dueDate | date:'mediumDate' }}
+                </p>
+
+                <div class="flex gap-2">
+
+                    <!-- COMPLETE BUTTON -->
+
+                    <button
+                        (click)="toggleComplete(task._id)"
+                        class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg text-sm transition"
+                    >
+                        {{ task.completed ? 'Undo' : 'Complete' }}
+                    </button>
+
+                    <!-- DELETE BUTTON -->
+
+                    <button
+                        (click)="deleteTask(task._id)"
+                        class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- EMPTY STATE -->
+
+    <div
+        *ngIf="tasks.length === 0"
+        class="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center"
+    >
+
+        <h2 class="text-3xl font-bold mb-4">
+            No Tasks Yet
+        </h2>
+
+        <p class="text-slate-400 text-lg">
+            Create your first task to start managing work 🚀
+        </p>
+
+    </div>
+
+</div>
+
+<!-- MODAL -->
+
+<div
+    *ngIf="showModal"
+    class="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+>
+
+    <div class="bg-slate-900 w-[550px] rounded-3xl p-8 relative shadow-2xl">
+
+        <!-- CLOSE BUTTON -->
+
+        <button
+            (click)="closeModal()"
+            class="absolute top-5 right-5 text-3xl text-purple-400 hover:text-purple-500"
+        >
+            ×
+        </button>
+
+        <!-- TITLE -->
+
+        <h1 class="text-3xl font-bold mb-8">
+            Add Task
+        </h1>
+
+        <!-- FORM -->
+
+        <form
+            class="space-y-5"
+            (ngSubmit)="createTask()"
+        >
+
+            <!-- TITLE -->
+
+            <input
+                type="text"
+                placeholder="Enter task title"
+                [(ngModel)]="formData.title"
+                name="title"
+                required
+                class="w-full p-4 rounded-xl bg-slate-700 text-white outline-none"
+            >
+
+            <!-- DESCRIPTION -->
+
+            <textarea
+                rows="5"
+                placeholder="Enter task description"
+                [(ngModel)]="formData.description"
+                name="description"
+                required
+                class="w-full p-4 rounded-xl bg-slate-700 text-white outline-none"
+            ></textarea>
+
+            <!-- PRIORITY + DATE -->
+
+            <div class="flex gap-4">
+
+                <select
+                    [(ngModel)]="formData.priority"
+                    name="priority"
+                    class="w-1/2 p-4 rounded-xl bg-slate-700 text-white outline-none"
+                >
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+
+                <input
+                    type="date"
+                    [(ngModel)]="formData.dueDate"
+                    name="dueDate"
+                    required
+                    class="w-1/2 p-4 rounded-xl bg-slate-700 text-white outline-none"
+                >
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button
+                type="submit"
+                class="w-full bg-green-500 hover:bg-green-600 py-4 rounded-xl text-lg font-semibold transition"
+            >
+                Create Task
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
